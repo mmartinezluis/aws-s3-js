@@ -1,3 +1,10 @@
+// Documentation: 
+// This software-development-kid performs 'browser-based uploads to Amazon S3'.
+// For official documention on the above process, refer to the "Amazon Simple Storage Service API Reference",
+// section "Authenticating Requests in Browser-Based Uploads Using POST (AWS Signature Version 4)", 
+// subsections "Broswer-Based uploads Using HTTP-POST", "Calculating a Signature", "POST Policy", 
+// and "Example: Browser-Based Upload using HTTP POST (Using AWS Signature Version 4)"
+
 class S3Client {
 
     static crypto = require('crypto')
