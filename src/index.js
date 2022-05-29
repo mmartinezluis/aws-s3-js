@@ -34,6 +34,15 @@ class S3Client {
             )
             .toString('base64')
             .replaceAll(/[$\n\r]/g, "")
+        
+        let c = this.constructor.crypto;
+        // c ( algorithm, key, ..rest(string))
+        const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
+        const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
+        const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
+        const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
+        const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
+        // signing key = HMAC-SHA256(HMAC-SHA256(HMAC-SHA256(HMAC-SHA256("AWS4" + "<YourSecretAccessKey>","20130524"),"us-east-1"),"s3"),"aws4_request")
 
     }
 
