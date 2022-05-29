@@ -13,27 +13,7 @@ class S3Client {
             const date = isoDate.split("T")[0].split("-").join("");  // yyyymmdd
             const formattedIso = isoDate.split("-").join("").split(":").join("").split(".").join("");
 
-            const policy = Buffer.from(
-                    JSON.stringify(
-                        { 
-                            expiration: isoDate,
-                            conditions: [
-                                {"bucket": this.config.bucketName},
-                                {"acl": "public-read"},
-                                ["starts-with", "$key", ""],
-                                ["starts-with", "$Content-Type", ""],
-                                {"x-amz-meta-uuid": "14365123651274"},
-                                {"x-amz-server-side-encryption": "AES256"},
-                                ["starts-with", "$x-amz-meta-tag", ""],
-                                {"x-amz-credential": `${this.config.accessKeyId}/${date}/${this.config.region}/s3/aws4_request`},
-                                {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
-                                {"x-amz-date": formattedIso }
-                            ] 
-                        }
-                    )
-                )
-                .toString('base64')
-                .replaceAll(/[$\n\r]/g, "")
+            const policy = this._generatePolicy(isoDate, date, formattedIso);
             
             let c = this.constructor.crypto;
             // c ( algorithm, key, ..rest(string))
@@ -94,6 +74,31 @@ class S3Client {
             }
         }
         xhr.send(payload);
+    }
+
+    _generatePolicy(isoDate, date, formattedIso) {
+        // Note: The optional "encoding" parameter from "Buffer.from(string[,enconding])" defaults to utf8
+        return Buffer.from(
+            JSON.stringify(
+                { 
+                    expiration: isoDate,
+                    conditions: [
+                        {"bucket": this.config.bucketName},
+                        {"acl": "public-read"},
+                        ["starts-with", "$key", ""],
+                        ["starts-with", "$Content-Type", ""],
+                        {"x-amz-meta-uuid": "14365123651274"},
+                        {"x-amz-server-side-encryption": "AES256"},
+                        ["starts-with", "$x-amz-meta-tag", ""],
+                        {"x-amz-credential": `${this.config.accessKeyId}/${date}/${this.config.region}/s3/aws4_request`},
+                        {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
+                        {"x-amz-date": formattedIso }
+                    ] 
+                }
+            )
+        )
+        .toString('base64')
+        .replaceAll(/[$\n\r]/g, "")
     }
 
 }
