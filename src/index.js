@@ -6,6 +6,10 @@ class S3Client {
         this.config = config;
     }
 
+    uploadFile(file, key, dirName) {
+        
+    }
+
     _request(uri, method, payload, callback) {
         let xhr = new XMLHttpRequest();
         xhr.open(method, uri, true);
