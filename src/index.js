@@ -89,6 +89,11 @@ class S3Client {
 
     _request(uri, method, payload, callback) {
         let xhr = new XMLHttpRequest();
+        if(method === "POST" && this.config.onUploadProgress){
+            xhr.upload.onprogress = function(event) {
+                this.config.onUploadProgress(event.loaded, event.total)
+            }.bind(this)
+        }
         xhr.open(method, uri, true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState === XMLHttpRequest.DONE) {
