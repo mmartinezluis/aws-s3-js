@@ -59,8 +59,26 @@ class S3Client {
             formData.append("x-amz-signature", signature)
             formData.append("file", file)
 
+            return new Promise((resolve, reject) => {
+                this._request(this.config.baseUrl, 'POST', formData, function(statusCode, xhr){
+                    if(statusCode >= 200 && statusCode <= 207) {
+                        console.log(xhr)
+                        return resolve({
+                            bucket: this.config.bucketName, 
+                            key: file.name, 
+                            location: this.config.baseUrl + "/" +  file.name, 
+                            status: statusCode 
+                        });
+                    }
+                    return reject({
+                        message: xhr.responseText, 
+                        status: xhr.status, 
+                        statusText: xhr.statusText
+                    });
+                }.bind(this));
+            })
         } catch(error) {
-            return Promise.reject(error)
+            return Promise.reject(error);
         }
     }
 
