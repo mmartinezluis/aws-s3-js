@@ -14,16 +14,8 @@ class S3Client {
             const formattedIso = isoDate.split("-").join("").split(":").join("").split(".").join("");
 
             const policy = this._generatePolicy(isoDate, date, formattedIso);
-            
-            let c = this.constructor.crypto;
-            // c ( algorithm, key, ..rest(string))
-            const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
-            const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
-            const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
-            const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
-            const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
-            // signing key = HMAC-SHA256(HMAC-SHA256(HMAC-SHA256(HMAC-SHA256("AWS4" + "<YourSecretAccessKey>","20130524"),"us-east-1"),"s3"),"aws4_request")
-
+            const signature = this._generateSignature(date, policy);
+        
             // Create a form to send to AWS S3
             let formData = new FormData();
             formData.append("key", file.name)
@@ -99,6 +91,19 @@ class S3Client {
         )
         .toString('base64')
         .replaceAll(/[$\n\r]/g, "")
+    }
+
+    _generateSignature(date, policy) {
+        // Calculating the SigningKey
+        let c = this.constructor.crypto;
+        // c ( algorithm, key, ..rest(string))
+        const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
+        const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
+        const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
+        const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
+        const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
+        // signing key = HMAC-SHA256(HMAC-SHA256(HMAC-SHA256(HMAC-SHA256("AWS4" + "<YourSecretAccessKey>","20130524"),"us-east-1"),"s3"),"aws4_request")
+        return signature;
     }
 
 }
