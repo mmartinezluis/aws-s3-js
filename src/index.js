@@ -150,6 +150,22 @@ class S3Client {
         return signature;
     }
 
+    _generateKey(file, key) {
+        let newKey, s;
+        if(this.config.parsingFunction && (typeof(s = this.config.parsingFunction(key)) !== "string" || !s.length)) throw new Error("The function for the 'parsingFunction' key must return a nonempty string")
+        // if there is a key, and it inlcudes a period, then if there is a parsingFunction, make 'newKey' equal to the return value of the parsingFunction, otherwise make 'newKey' equal to the return value of the 'helpers.parseKey' function
+        newKey = key && key.includes('.')
+            ? this.config.parsingFunction ? s : helpers.parseKey(key)
+            : ( 
+                // below expression is equivalent to: ( a || b ) + "." + file.type.split("/")[1]
+                // if there is a key at all, then make 'newKey' equal to the return value of the 'parsingFunction' (if defined) or the return value of the 'helpers.parseKey' function; if there is no key, make 'newKey' equal to the return value of the randomBytes method
+                // after providing a value for newKey, add the file extension to it
+                ( key && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
+                this.constructor.crypto.randomBytes(11).toString('hex')
+               ) + "." + file.type.split("/")[1];
+        return newKey;   
+    }
+
 }
 
 const helpers = {};
