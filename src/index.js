@@ -18,10 +18,12 @@ class S3Client {
 
             const policy = this._generatePolicy(isoDate, date, formattedIso);
             const signature = this._generateSignature(date, policy);
+            const newKey = this.config.parseFileName ? this._generateKey(file, key) : key
+            const fileName = dirName ? dirName + "/" + newKey : newKey;
         
             // Create a form to send to AWS S3
             let formData = new FormData();
-            formData.append("key", file.name)
+            formData.append("key", fileName)
             formData.append("acl", "public-read")
             formData.append("content-type", file.type)
             formData.append("x-amz-meta-uuid", "14365123651274")
@@ -40,8 +42,8 @@ class S3Client {
                         console.log(xhr)
                         return resolve({
                             bucket: this.config.bucketName, 
-                            key: file.name, 
-                            location: this.config.baseUrl + "/" +  file.name, 
+                            key: fileName, 
+                            location: this.config.baseUrl + "/" +  fileName, 
                             status: statusCode 
                         });
                     }
