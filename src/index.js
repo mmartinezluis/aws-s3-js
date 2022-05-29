@@ -9,6 +9,7 @@ class S3Client {
     uploadFile(file, key, dirName) {
         try {
             this._sanityCheckConfig(); 
+            this._sanityCheckPayload({file, key, dirName});
 
             const tenMinutes = 6e5;
             const isoDate = new Date(new Date().getTime() + tenMinutes).toISOString();
@@ -103,6 +104,12 @@ class S3Client {
         if(this.config.parseFileName && typeof(this.config.parseFileName) !== "boolean"){ throw new Error("If included, 'parseFileName' must be a boolean") } else this.config.parseFileName = true;
         if(this.config.onUploadProgress && typeof(this.config.onUploadProgress) !== "function") throw new Error("If included, the value for the 'onUploadProgress' key must be a function");
         if(this.config.parsingFunction && typeof(this.config.parsingFunction) !== "function") throw new Error("If included, the value for the 'parsingFunction' key must be a function returning a nonempty string")
+    }
+
+    _sanityCheckPayload(payload) {
+        if(!payload.file) throw new Error("A file must be provided");
+        if(payload.key && (typeof(payload.key) !== "string" || !payload.key.trim().length)) throw new Error("If included, the 'key' argumant must be a string");
+        if(payload.dirName && (typeof(payload.dirName) !== "string" || !payload.dirName.trim().length)) throw new Error("If included, the 'dirName' argument must be a nonempty string");
     }
 
     _generatePolicy(isoDate, date, formattedIso) {
