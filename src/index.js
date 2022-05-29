@@ -9,7 +9,7 @@ class S3Client {
     uploadFile(file, key, dirName) {
         try {
             this._sanityCheckConfig(); 
-            
+
             const tenMinutes = 6e5;
             const isoDate = new Date(new Date().getTime() + tenMinutes).toISOString();
             const date = isoDate.split("T")[0].split("-").join("");  // yyyymmdd
@@ -54,6 +54,10 @@ class S3Client {
         } catch(error) {
             return Promise.reject(error);
         }
+    }
+
+    deleteFile(key, dirName) {
+
     }
 
     _request(uri, method, payload, callback) {
