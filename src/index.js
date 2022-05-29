@@ -57,7 +57,20 @@ class S3Client {
     }
 
     deleteFile(key, dirName) {
-
+        this._sanityCheckConfig(); 
+        if(typeof(key) !== "string" || !key.trim().length) throw new Error("'key' must be a nonempty string");
+        if(dirName && (typeof dirName !== "string" || !dirName.length)) throw new Error("If included, 'dirName' must be a nonempty string");
+        return new Promise((resolve, reject) => {
+            this._request(this.config.baseUrl + "/" + (dirName ? dirName + "/" : "") + key, "DELETE", undefined, function(statusCode, xhr) {
+                console.log(statusCode);
+                console.log(xhr);
+                return resolve({
+                    key: (dirName ? dirName + "/" : "") + key, 
+                    status: statusCode,
+                    xhr: xhr
+                });
+            })
+        })
     }
 
     _request(uri, method, payload, callback) {
