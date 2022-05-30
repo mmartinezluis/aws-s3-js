@@ -146,7 +146,7 @@ class S3Client {
             )
         )
         .toString('base64')
-        .replaceAll(/[$\n\r]/g, "")
+        .replace(/[$\n\r]/g, "")
     }
 
     _generateSignature(date, policy) {
@@ -186,7 +186,7 @@ const helpers = {};
 helpers.parseKey = function(key) {
     // AWS S3 documentaion provides a list of safe/unsave characters: https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
     // The following characters were tested and are safe to use in Amazon S3: "&", "$", "@", "'", ",", ";"; 
-    let parsed = key.replaceAll(/[{`}^%\]">[~<|#/=?+:\s]/g, "").replaceAll(/[\\]/g, "")
+    let parsed = key.replace(/[{`}^%\]">[~<|#/=?+:\s]/g, "").replace(/[\\]/g, "")
     if(!parsed.length) throw new Error("A 'key' may not be composed of special characters only as some are scaped, which may ressult in an empty (invalid) key")
     return parsed
 }

@@ -1,2 +1,2 @@
 
-### Still Resolving some NPM issues; please come back later. 
+### Resolving some NPM issues; please come back later. 
