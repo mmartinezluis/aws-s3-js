@@ -4,10 +4,11 @@
 // section "Authenticating Requests in Browser-Based Uploads Using POST (AWS Signature Version 4)", 
 // subsections "Broswer-Based uploads Using HTTP-POST", "Calculating a Signature", "POST Policy", 
 // and "Example: Browser-Based Upload using HTTP POST (Using AWS Signature Version 4)"
+const crypto = require('crypto');
 
 class S3Client {
 
-    static crypto = require('crypto')
+    // static crypto = require('crypto')
 
     constructor(config) {
         this.config = config;
@@ -153,7 +154,8 @@ class S3Client {
 
     _generateSignature(date, policy) {
         // Calculating the SigningKey
-        let c = this.constructor.crypto;
+        // let c = this.constructor.crypto;
+        let c = crypto;
         // c ( algorithm, key, ..rest(string))
         const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
         const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
@@ -175,7 +177,8 @@ class S3Client {
                 // if there is a key at all, then make 'newKey' equal to the return value of the 'parsingFunction' (if defined) or the return value of the 'helpers.parseKey' function; if there is no key, make 'newKey' equal to the return value of the randomBytes method
                 // after providing a value for newKey, add the file extension to it
                 ( key && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
-                this.constructor.crypto.randomBytes(11).toString('hex')
+                // this.constructor.crypto.randomBytes(11).toString('hex')
+                crypto.randomBytes(11).toString('hex')
                ) + "." + file.type.split("/")[1];
         return newKey;   
     }
