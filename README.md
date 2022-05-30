@@ -1,2 +1,2 @@
 
-Still Resolving some NPM issues; code is ready, please come back later. 
+Still Resolving some NPM issues; please come back later. 
