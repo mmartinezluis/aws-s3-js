@@ -188,4 +188,4 @@ helpers.parseKey = function(key) {
     return parsed
 }
 
-export default S3Client;
+module.exports = S3Client;
