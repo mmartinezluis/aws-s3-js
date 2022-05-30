@@ -55,7 +55,10 @@ class S3Client {
                         statusText: xhr.statusText
                     });
                 }.bind(this));
-            })
+            }).then(
+                data => data,
+                error => error
+            )
         } catch(error) {
             return Promise.reject(error);
         }
