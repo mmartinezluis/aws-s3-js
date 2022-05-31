@@ -2,8 +2,6 @@ const crypto = require('crypto');
 
 class S3Client {
 
-    // static crypto = require('crypto')
-
     constructor(config) {
         this.config = config;
     }
@@ -23,7 +21,6 @@ class S3Client {
             const newKey = this.config.parseFileName ? this._generateKey(file, key) : key
             const fileName = dirName ? dirName + "/" + newKey : newKey;
         
-            // Create a form to send to AWS S3
             let formData = new FormData();
             formData.append("key", fileName)
             formData.append("acl", "public-read")
@@ -55,10 +52,7 @@ class S3Client {
                         statusText: xhr.statusText
                     });
                 }.bind(this));
-            }).then(
-                data => data,
-                error => error
-            )
+            })
         } catch(error) {
             return Promise.reject(error);
         }
@@ -113,7 +107,7 @@ class S3Client {
         if(typeof(this.config.secretAccessKey) !== "string" || !this.config.secretAccessKey.trim().length ) throw new Error("'secretAccessKey' must be a nonempty string");
         // Optional params
         if(this.config.baseUrl && (typeof(this.config.baseUrl) !== "string" || !this.config.baseUrl.trim().length)){ throw new Error("If included, 'baseUrl' must be a nonempty string") } else this.config.baseUrl = (this.config.baseUrl || 'https://' + this.config.bucketName + '.s3.' + this.config.region + '.amazonaws.com');         
-        if(this.config.parseFileName && typeof(this.config.parseFileName) !== "boolean"){ throw new Error("If included, 'parseFileName' must be a boolean") } else this.config.parseFileName = true;
+        if(this.config.parseFileName && typeof(this.config.parseFileName) !== "boolean"){ throw new Error("If included, 'parseFileName' must be a boolean") } else this.config.parseFileName = this.config.parseFileName !== undefined ? this.config.parseFileName : true;
         if(this.config.onUploadProgress && typeof(this.config.onUploadProgress) !== "function") throw new Error("If included, the value for the 'onUploadProgress' key must be a function");
         if(this.config.parsingFunction && typeof(this.config.parsingFunction) !== "function") throw new Error("If included, the value for the 'parsingFunction' key must be a function returning a nonempty string")
     }
@@ -125,7 +119,6 @@ class S3Client {
     }
 
     _generatePolicy(isoDate, date, formattedIso) {
-        // Note: The optional "encoding" parameter from "Buffer.from(string[,enconding])" defaults to utf8
         return Buffer.from(
             JSON.stringify(
                 { 
@@ -150,33 +143,28 @@ class S3Client {
     }
 
     _generateSignature(date, policy) {
-        // Calculating the SigningKey
-        // let c = this.constructor.crypto;
         let c = crypto;
-        // c ( algorithm, key, ..rest(string))
         const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
         const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
         const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
         const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
         const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
-        // signing key = HMAC-SHA256(HMAC-SHA256(HMAC-SHA256(HMAC-SHA256("AWS4" + "<YourSecretAccessKey>","20130524"),"us-east-1"),"s3"),"aws4_request")
         return signature;
     }
 
     _generateKey(file, key) {
         let newKey, s;
         if(this.config.parsingFunction && (typeof(s = this.config.parsingFunction(key)) !== "string" || !s.length)) throw new Error("The function for the 'parsingFunction' key must return a nonempty string")
-        // if there is a key, and it inlcudes a period, then if there is a parsingFunction, make 'newKey' equal to the return value of the parsingFunction, otherwise make 'newKey' equal to the return value of the 'helpers.parseKey' function
-        newKey = key && key.includes('.')
-            ? this.config.parsingFunction ? s : helpers.parseKey(key)
+        newKey = key && key.includes('.') 
+            ? (
+                ( this.config.parseFileName && ((this.config.parsingFunction && s) || helpers.parseKey(key)) ) ||
+                key
+              )
             : ( 
-                // below expression is equivalent to: ( a || b ) + "." + file.type.split("/")[1]
-                // if there is a key at all, then make 'newKey' equal to the return value of the 'parsingFunction' (if defined) or the return value of the 'helpers.parseKey' function; if there is no key, make 'newKey' equal to the return value of the randomBytes method
-                // after providing a value for newKey, add the file extension to it
-                ( key && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
-                // this.constructor.crypto.randomBytes(11).toString('hex')
+                ( key && this.config.parseFileName && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
+                key ||
                 crypto.randomBytes(11).toString('hex')
-               ) + "." + file.type.split("/")[1];
+              ) + "." + file.type.split("/")[1];
         return newKey;   
     }
 
@@ -184,8 +172,6 @@ class S3Client {
 
 const helpers = {};
 helpers.parseKey = function(key) {
-    // AWS S3 documentaion provides a list of safe/unsave characters: https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
-    // The following characters were tested and are safe to use in Amazon S3: "&", "$", "@", "'", ",", ";"; 
     let parsed = key.replace(/[{`}^%\]">[~<|#/=?+:\s]/g, "").replace(/[\\]/g, "")
     if(!parsed.length) throw new Error("A 'key' may not be composed of special characters only as some are scaped, which may ressult in an empty (invalid) key")
     return parsed
