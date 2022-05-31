@@ -1,21 +1,30 @@
 
 # AWS S3 JS
+
 Upload files to an Amazon S3 bucket using JavaScript.
 
-## Installation
-Run `npm install aws-s3-js` to install the package in your project. 
+[Note: the module may not currently work with react-script greater than version 4.0.3 (you might see an `Can't resolve 'crypto' (module) in ...'`error (which won't allow React to run). This is my first npm package; I'm  trying resolve the issue. The package has been tested with react-script 4.0.3 and it works as expected both locallly and in produciton environment. Please come back later if you are using react-script 5.0.x. after I relase the fix.]
 
-## Basic Usage
+## Installation
+
+To install the package in your project run
+
+```
+npm install aws-s3-js
+```
+
+## Usage
+
 To get started, call the constructor using the below keys:
 
 ```javascript
 import awsS3Js from 'aws-s3-js'
 
 const config = {
-    bucketName: "<bueket-name>",
+    bucketName: "<bucket-name>",
     region: "<bucket-region>",
     accessKeyId: "<your-accessKey>",
-    secretAccessKey: "<your-secrectAccessKey>"
+    secretAccessKey: "<your-secretAccessKey>"
 }
 
 const S3Client = new awsS3Js(config);
@@ -77,7 +86,7 @@ config = {
     baseUrl: "<string> (optional) (if not provided, utilizes the bucket's info to form the bucket's url)",
     parseFileName: "<boolean> (optinal) (defaults to 'true')",
     onUploadProgress: "<callback function> (optional) (passes you two arguments: 'loaded' and 'total' so you can use them to track/display the progress of the file upload)",
-    parsingFunction: "<function> (optional) (takes one argument, the file's key (the new name for the file; refer to below example for usage))"
+    parsingFunction: "<function> (optional) (takes one argument, the file's key (the new name for the file; returns a string; refer the Advance Useage section for example useage))"
 }
 ```
 
@@ -88,14 +97,13 @@ S3Client.uploadFile(
     "file: <a file> (required)", 
     "key: <string> (optional) (if included, this will be the new name of the file; if not included, a random string will be generated and assigned as a key, with the file type appended at the end (e.g., .png, .jpeg,))", 
     "dirName: <string> (optional) (example: images/cats)" 
-)
-   
+)   
 ```
 You can use a combination of the above configuartions to custmoize the functionality of the module. 
 
 ### Basic Usage
 
-1. Using the module with parseFileName on (default):
+#### Using the module with `parseFileName` on (default)
 
 ```javascript
 import awsS3Js from 'aws-s3-js'
@@ -112,14 +120,15 @@ const S3Client = new awsS3Js(config);
 S3Client
     .uploadFile(file, file.name)
     .then( resp => console.log(resp))
-
 ```
-Assuming that the file name is
-`"#my/picture [in] ?$ {the} +&mountain.png"`
 
-it will be parsed before sending the file to Amazon, and you'll get a response that contains the following key (from the file name):
-
+Assuming that the `file.name` is
+```javascript
+"#my/picture [in] ?$ {the} +&mountain.png"
 ```
+it will be parsed before sending the file to Amazon, and you'll get a response containing the following value for `key` (from the file name):
+
+```javascript
 {
     bucket: "bucketname",
     key: "'mypicturein$the&mountain.png'",
@@ -129,42 +138,50 @@ it will be parsed before sending the file to Amazon, and you'll get a response t
 ```
 You can see that some special characters were removed as well as blank spaces. The module's default parsing function takes care of removing some special characters that may void your object's Amazon S3 key (such as '#', '?', '+'). You can find the function at src/index.js, helpers.parseKey function. 
 
-2. Creating and/or uploading to a specific directory:
+#### Creating and/or uploading to a specific directory:
 
 Suppose you have files with names `adjacency-natrix.jpeg` and `Barcelona/2018.png`, and you want to upload them to different directories (folders). You would call the S3Client like so (asssume default configuration):
 
+For the first file:
 ```javascript
-// manual assignment of key 
+// note: here we assign a key manually
 S3Client
-    .upload(file,  "adjacency-natrix.jpeg", "technology")
+    .upload(file,  "adjacency-list.jpeg", "technology")
     .then( data => console.log(data))
 ```
 
 The response object would contain 
-`key: technology/adjacency-natrix.jpeg`
-
 ```javascript
-// using the file's name as a key
+key: "technology/adjacency-list.jpeg"
+```
+
+For the second file:
+```javascript
+// note: here we use the file's name as a key
 S3Client
     .upload(file, file.name, "vacation")
     .then( data => console.log(data))
 ```
 
 The response object would contain 
-`key: vacation/Barcelona2018.png`
+```javascript
+key: "vacation/Barcelona2018.png"
+```
 
 For the second file, note that the "/" from the file name was removed; if the forward slash would have gone through, it would have created a new directory: `vacation/Barcelona/`. If your bucket is consumed by users of your app, you probably don't want new directories being created at random if users include file names that contain a forward slash. You can always turn off the parsing, if you wish, in the constructor:
 
 ```javascript
 const config = {
-    ... some keys,
+    //... some keys,
     parseFileName: false
 }
 ```
-which, would have produced, for the second file:
-`key: vacation/Barcelona/2018.png`
+which would have produced, for the second file:
+```javascript
+key: "vacation/Barcelona/2018.png"
+```
 
-3. leaving off the key
+#### Leaving off the key
 
 If you don't specify a key, the module will generate a random key of 22 characters:
 
@@ -174,15 +191,16 @@ S3Client
     .then( data => console.log(data))
 
     // sample response key:
-    // key: vacation/067b2a3bce020dptbcf9bc.png
+    // key: "vacation/067b2a3bce020dptbcf9bc.png"
 ```
 
 ### Advanced Usage
-1. Tracking upload progress:
+
+#### Tracking upload progress:
 
 This functionality may come handy if you are uploading a large file.
 
-Define a function to assign it to the constructor's 'onUploadProgress' key, which provides you with two arguments (`loaded`, and `total`):
+Define a function to assign it to the constructor's `onUploadProgress` key, which provides you with two arguments (`loaded`, and `total`):
 
 ```javascript
 import awsS3Js from 'aws-s3-js'
@@ -193,14 +211,14 @@ const onUploadProgress = function(loaded, total) {
 }
 
 const S3Client = new awsS3Js({
-    bucketName: "<bueket-name>",
+    bucketName: "<bucket-name>",
     region: "<bucket-region>",
     accessKeyId: "<your-accessKey>",
-    secretAccessKey: "<your-secrectAccessKey>",
+    secretAccessKey: "<your-secretAccessKey>",
     onUploadProgress: (loaded, total) => onUploadProgress(loaded, total)
 })
 ```
-The `onUploadProgress` function will ba automatically called while a file is uploading:
+The `onUploadProgress` function will be automatically called while a file is uploading:
 
 ```javascript
 S3Client
@@ -208,16 +226,17 @@ S3Client
     .then( data => console.log(data))
 ```
 
-2. Using a custom parsing function:
+### Using a custom parsing function:
 
 You can provide your own parsing function for the module to use instead of the module's default parsing function (note: if 'parseFileName` is set to false, all parsing will be skpped and the original key provided will be returned):
 
 ```javascript
 import awsS3Js from 'aws-s3-js'
 
+// the parsing function mus return a string
 const parsingFunction = function(key) {
     // Do something, such as removing special characters from the key
-     key.replace(/[^]/g, "")
+     return key.replace(/[^]/g, "")
 }
 
 const S3Client = new awsS3Js({
@@ -236,8 +255,11 @@ S3Client
 
 // Expected key in response object:
 // ley: "thisisthefilekey.png"
-
 ```
+
+## Contributing
+Coming later.
+
 
 
 

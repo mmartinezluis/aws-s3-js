@@ -38,7 +38,6 @@ class S3Client {
             return new Promise((resolve, reject) => {
                 this._request(this.config.baseUrl, 'POST', formData, function(statusCode, xhr){
                     if(statusCode >= 200 && statusCode <= 207) {
-                        console.log(xhr)
                         return resolve({
                             bucket: this.config.bucketName, 
                             key: fileName, 
@@ -58,17 +57,14 @@ class S3Client {
         }
     }
 
-    deleteFile(key, dirName) {
+    deleteFile(key) {
         try {
             this._sanityCheckConfig(); 
             if(typeof(key) !== "string" || !key.trim().length) throw new Error("'key' must be a nonempty string");
-            if(dirName && (typeof dirName !== "string" || !dirName.length)) throw new Error("If included, 'dirName' must be a nonempty string");
             return new Promise((resolve, reject) => {
                 this._request(this.config.baseUrl + "/" + (dirName ? dirName + "/" : "") + key, "DELETE", undefined, function(statusCode, xhr) {
-                    console.log(statusCode);
-                    console.log(xhr);
                     return resolve({
-                        key: (dirName ? dirName + "/" : "") + key, 
+                        key: key, 
                         status: statusCode,
                         xhr: xhr
                     });
