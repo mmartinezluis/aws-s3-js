@@ -18,7 +18,7 @@ class S3Client {
 
             const policy = this._generatePolicy(isoDate, date, formattedIso);
             const signature = this._generateSignature(date, policy);
-            const newKey = this.config.parseFileName ? this._generateKey(file, key) : key
+            const newKey = this._generateKey(file, key);
             const fileName = dirName ? dirName + "/" + newKey : newKey;
         
             let formData = new FormData();
