@@ -1,4 +1,6 @@
-const crypto = require('crypto');
+const createHmac = require('create-hmac');
+const randomBytes = require('randombytes');
+// const crypto = require('crypto');
 
 class S3Client {
 
@@ -139,12 +141,12 @@ class S3Client {
     }
 
     _generateSignature(date, policy) {
-        let c = crypto;
-        const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
-        const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
-        const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
-        const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
-        const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
+        // let c = crypto;
+        const dateKey = createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
+        const dateRegionKey = createHmac('sha256', dateKey).update(this.config.region).digest();
+        const dateRegionServiceKey = createHmac('sha256', dateRegionKey).update('s3').digest();
+        const signingKey = createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
+        const signature = createHmac('sha256', signingKey).update(policy).digest('hex');
         return signature;
     }
 
@@ -159,7 +161,8 @@ class S3Client {
             : ( 
                 ( key && this.config.parseFileName && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
                 key ||
-                crypto.randomBytes(11).toString('hex')
+                // crypto.randomBytes(11).toString('hex')
+                randomBytes(11).toString('hex')
               ) + "." + file.type.split("/")[1];
         return newKey;   
     }
