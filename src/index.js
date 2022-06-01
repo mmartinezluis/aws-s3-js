@@ -1,4 +1,4 @@
-const cryptoBrowserify = require('crypto-browserify')
+// const cryptoBrowserify = require('crypto-browserify')
 // const createHmac = require('create-hmac');
 // const randomBytes = require('randombytes');
 // const crypto = require('crypto');
