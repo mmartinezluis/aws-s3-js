@@ -1,5 +1,6 @@
-const crypto = require('crypto-browserify')
+const CryptoES = require('crypto-es');
 const Buffer = require('buffer/').Buffer;
+const { nanoid } = reuire('nanoid');
 
 // IMPORTANT NOTE:
 // The combination of the packages "CryptoES", "nanoid", and "buffer"
@@ -8,9 +9,6 @@ const Buffer = require('buffer/').Buffer;
 // file when using WEBPACK 5 OR REACT-SCRIPTS 5.0+
 // This makes this package work straight after installation without changes
 // to the React project
-
-
-
 
 class S3Client {
 
@@ -151,13 +149,18 @@ class S3Client {
     }
 
     _generateSignature(date, policy) {
-        // let c = crypto;
-        let c = cryptoBrowserify;
-        const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
-        const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
-        const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
-        const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
-        const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
+        let c = CryptoES;
+        // const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
+        // const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
+        // const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
+        // const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
+        // const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
+        r.HmacSHA256("aws4_request", u)
+        const dateKey = c.HmacSHA256(date, "AWS4" + this.config.secretAccessKey)
+        const dateRegionKey = c.HmacSHA256(this.config.region, dateKey)
+        const dateRegionServiceKey = c.HmacSHA256('s3', dateRegionKey)
+        const signingKey = c.HmacSHA256('aws4_request', dateRegionServiceKey)
+        const signature = c.HmacSHA256(policy, signingKey).toString('hex');
         return signature;
     }
 
@@ -173,7 +176,7 @@ class S3Client {
                 ( key && this.config.parseFileName && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
                 key ||
                 // crypto.randomBytes(11).toString('hex')
-                randomBytes(11).toString('hex')
+                nanoid()
               ) + "." + file.type.split("/")[1];
         return newKey;   
     }
