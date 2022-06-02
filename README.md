@@ -3,7 +3,7 @@
 
 Upload files to an Amazon S3 bucket using JavaScript.
 
-[Note: the module may not currently work with react-scripts greater than version 4.0.3 (you might see an `Can't resolve 'crypto' (module) in ...'`error (which won't allow React to run). This is my first npm package; I'm  trying to resolve the issue. The package has been tested with react-scripts 4.0.3 and it works as expected both locallly and in produciton environment [please use aws-s3-js VERSION 1.0.9]. Please come back later if you are using react-scripts 5.0.x. or Webpack 5 after I release the fix.]. I'm making chaniges to make the package work with Webpack 5; so use verion 1.0.9 for the moment.
+[Note: the module may not currently work with react-scripts greater than version 4.0.3 (you might see an `Can't resolve 'crypto' (module) in ...'`error (which won't allow React to run). This is my first npm package; I'm  trying to resolve the issue. The package has been tested with react-scripts 4.0.3 and it works as expected both locallly and in produciton environment [please use aws-s3-js VERSION 1.0.9]. Please come back later if you are using react-scripts 5.0.x. or Webpack 5 after I release the fix.]. I'm currently making changes to make the package work with Webpack 5; so use verion 1.0.9 for the moment.
 
 ## Installation
 

@@ -1,6 +1,6 @@
 import CryptoES from 'crypto-es';
-const Buffer = require('buffer/').Buffer;
-const { nanoid } = require('nanoid');
+import { nanoid } from 'nanoid';
+// const Buffer = require('buffer/').Buffer;
 // Object.defineProperty(exports, "__esModule", { value: true });
 
 // IMPORTANT NOTE:
@@ -192,6 +192,6 @@ helpers.parseKey = function(key) {
     return parsed
 }
 
-module.exports = S3Client;
-// export default S3Client;
+export default S3Client;
+// module.exports = S3Client;
 // exports.default = S3Client;
