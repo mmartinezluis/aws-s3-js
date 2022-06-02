@@ -1,6 +1,6 @@
 const CryptoES = require('crypto-es');
 const Buffer = require('buffer/').Buffer;
-const { nanoid } = reuire('nanoid');
+const { nanoid } = require('nanoid');
 
 // IMPORTANT NOTE:
 // The combination of the packages "CryptoES", "nanoid", and "buffer"
