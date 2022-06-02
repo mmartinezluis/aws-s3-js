@@ -149,17 +149,17 @@ class S3Client {
     }
 
     _generateSignature(date, policy) {
-        let c = CryptoES;
+        // let c = CryptoES;
         // const dateKey = c.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
         // const dateRegionKey = c.createHmac('sha256', dateKey).update(this.config.region).digest();
         // const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
         // const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
         // const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
-        const dateKey = c.HmacSHA256(date, "AWS4" + this.config.secretAccessKey)
-        const dateRegionKey = c.HmacSHA256(this.config.region, dateKey)
-        const dateRegionServiceKey = c.HmacSHA256('s3', dateRegionKey)
-        const signingKey = c.HmacSHA256('aws4_request', dateRegionServiceKey)
-        const signature = c.HmacSHA256(policy, signingKey).toString('hex');
+        const dateKey = CryptoES.HmacSHA256(date, "AWS4" + this.config.secretAccessKey);
+        const dateRegionKey = CryptoES.HmacSHA256(this.config.region, dateKey);
+        const dateRegionServiceKey = CryptoES.HmacSHA256('s3', dateRegionKey);
+        const signingKey = CryptoES.HmacSHA256('aws4_request', dateRegionServiceKey);
+        const signature = CryptoES.HmacSHA256(policy, signingKey).toString(CryptoES.enc.Hex);
         return signature;
     }
 
