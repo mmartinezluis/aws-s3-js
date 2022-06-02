@@ -1,7 +1,17 @@
-// const cryptoBrowserify = require('crypto-browserify')
-// const createHmac = require('create-hmac');
-// const randomBytes = require('randombytes');
-// const crypto = require('crypto');
+const CryptoES = require('crypto-es')
+const nanoid = require('nanoid');
+const Buffer = require('buffer/').Buffer;
+
+// IMPORTANT NOTE:
+// The combination of the packages "CryptoES", "nanoid", and "buffer"
+// implement Node Js modules adapted to the browser and do not require
+// not require to modify config.webpack.js nor creating a "config-overrides.js"
+// file when using WEBPACK 5 OR REACT-SCRIPTS 5.0+
+// This makes this package work straight after installation without changes
+// to the React project
+
+
+
 
 class S3Client {
 
