@@ -1,5 +1,4 @@
-const CryptoES = require('crypto-es')
-const nanoid = require('nanoid');
+const crypto = require('crypto-browserify')
 const Buffer = require('buffer/').Buffer;
 
 // IMPORTANT NOTE:
