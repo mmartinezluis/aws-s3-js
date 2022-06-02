@@ -1,4 +1,4 @@
-import CryptoES from 'crypto-es';
+const CryptoES = require('crypto-es');
 const Buffer = require('buffer/').Buffer;
 const { nanoid } = require('nanoid');
 
