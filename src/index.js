@@ -155,7 +155,6 @@ class S3Client {
         // const dateRegionServiceKey = c.createHmac('sha256', dateRegionKey).update('s3').digest();
         // const signingKey = c.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
         // const signature = c.createHmac('sha256', signingKey).update(policy).digest('hex');
-        r.HmacSHA256("aws4_request", u)
         const dateKey = c.HmacSHA256(date, "AWS4" + this.config.secretAccessKey)
         const dateRegionKey = c.HmacSHA256(this.config.region, dateKey)
         const dateRegionServiceKey = c.HmacSHA256('s3', dateRegionKey)
