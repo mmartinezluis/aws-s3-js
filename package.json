@@ -1,8 +1,8 @@
 {
   "name": "aws-s3-js",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "upload/delete files from an Amazon S3 bucket",
-  "main": "src/index.cjs",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,7 +30,6 @@
     "nanoid": "3.3.4"
   },
   "devDependencies": {
-    "microbundle": "^0.9.0",
     "typescript": "^3.2.4"
   }
 }

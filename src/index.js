@@ -194,4 +194,5 @@ helpers.parseKey = function(key) {
 
 export default S3Client;
 // module.exports = S3Client;
+// module.exports.default = S3Client;
 // exports.default = S3Client;
