@@ -1,8 +1,8 @@
 {
   "name": "aws-s3-js",
-  "version": "1.0.52",
+  "version": "1.0.53",
   "description": "upload/delete files from an Amazon S3 bucket",
-  "main": "src/test2.mjs",
+  "main": "src/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
