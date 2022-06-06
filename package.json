@@ -1,6 +1,6 @@
 {
   "name": "aws-s3-js",
-  "version": "1.0.50",
+  "version": "1.0.51",
   "description": "upload/delete files from an Amazon S3 bucket",
   "main": "src/test2.mjs",
   "scripts": {
@@ -26,7 +26,6 @@
   "dependencies": {
     "crypto-es": "1.2.7",
     "nanoid": "3.3.4",
-    "browserify": "17.0.0",
     "buffer": "6.0.3"
   },
   "devDependencies": {

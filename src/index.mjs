@@ -1,6 +1,6 @@
 import CryptoES from 'crypto-es';
 import { nanoid } from 'nanoid';
-import customBuffer from "buffer";
+import customBuffer from "..buffer.js";
 
 // const Buffer = require('buffer/').Buffer;
 // Object.defineProperty(exports, "__esModule", { value: true });
