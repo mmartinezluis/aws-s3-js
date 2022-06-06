@@ -3,14 +3,20 @@
 
 Upload files to an Amazon S3 bucket using JavaScript.
 
-[Note: the module may not currently work with react-scripts greater than version 4.0.3 (you might see an `Can't resolve 'crypto' (module) in ...'`error (which won't allow React to run). This is my first npm package; I'm  trying to resolve the issue. The package has been tested with react-scripts 4.0.3 and it works as expected both locallly and in produciton environment [please use aws-s3-js VERSION 1.0.9]. Please come back later if you are using react-scripts 5.0.x. or Webpack 5 after I release the fix.]. I'm currently making changes to make the package work with Webpack 5; so use verion 1.0.9 for the moment.
+[Finally: ater 50+ trials, `aws-s3-js` now works straight out of the box with react-scripts 5 or Webpack 5, even if you have not configured your app to [polyfill Node Js core modules](https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5). `aws-s3-js` also works with react-scripts 4 straight out of the box.]
+[Note: aws-3-js does not currently support Typescript; for this reason, you might see a message next to the import statement (`import awsS3Js from 'aws-s3-js'`) that reads `Could not find a declaration file for module "aws-s3-js". '/.../node_modules/aws-s3-js/src/index.mjs' implicitly has an 'any' type.` Don't worry, this does not affect the functionality of the package. I will be working on adding Typescript support next (and the message will go away).]
 
 ## Installation
 
-To install the package in your project run
+To install the package, in your project run
 
 ```
 npm install aws-s3-js
+```
+
+Then use a default import statement:
+```
+import awsS3Js from 'aws-s3-js'
 ```
 
 ## Usage
