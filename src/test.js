@@ -1,8 +1,14 @@
-import toBuffer from "typedarray-to-buffer";
+import customBuffer from 'buffer'
+// import toBuffer from "typedarray-to-buffer";
 
-function run(){
-    const encoder = new TextEncoder();
-    return toBuffer(encoder.encode("Hello"));
+
+function foo(){
+    return customBuffer.from("Hello")
 }
 
-export default run
+// function run(){
+//     const encoder = new TextEncoder();
+//     return toBuffer(encoder.encode("Hello"));
+// }
+
+export default foo

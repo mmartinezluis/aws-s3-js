@@ -1,6 +1,6 @@
 {
   "name": "aws-s3-js",
-  "version": "1.0.340",
+  "version": "1.0.41",
   "description": "upload/delete files from an Amazon S3 bucket",
   "main": "src/test.js",
   "scripts": {
@@ -28,7 +28,8 @@
     "crypto-es": "1.2.7",
     "buffer": "6.0.3",
     "nanoid": "3.3.4",
-    "typedarray-to-buffer": "^4.0.0"
+    "typedarray-to-buffer": "^4.0.0",
+    "browserify": "17.0.0"
   },
   "devDependencies": {
     "typescript": "^3.2.4"
