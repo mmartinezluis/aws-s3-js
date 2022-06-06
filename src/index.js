@@ -1,6 +1,6 @@
 import CryptoES from 'crypto-es';
 import { nanoid } from 'nanoid';
-import Buffer from "../buffer.cjs";
+import {customBuffer} from "../buffer.cjs";
 
 // const Buffer = require('buffer/').Buffer;
 // Object.defineProperty(exports, "__esModule", { value: true });
@@ -128,7 +128,7 @@ class S3Client {
     }
 
     _generatePolicy(isoDate, date, formattedIso) {
-        return Buffer.from(
+        return customBuffer.from(
             JSON.stringify(
                 { 
                     expiration: isoDate,
