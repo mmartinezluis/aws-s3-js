@@ -1,17 +1,6 @@
 import CryptoES from 'crypto-es';
-import nanoid  from '../nanoid.js';
-import customBuffer from "../buffer.js";
-
-// const Buffer = require('buffer/').Buffer;
-// Object.defineProperty(exports, "__esModule", { value: true });
-
-// IMPORTANT NOTE:
-// The combination of the packages "CryptoES", "nanoid", and "buffer"
-// implement Node Js modules adapted to the browser and do not require
-// not require to modify config.webpack.js nor creating a "config-overrides.js"
-// file when using WEBPACK 5 OR REACT-SCRIPTS 5.0+
-// This makes this package work straight after installation without changes
-// to the React project
+import nanoid  from '../_nanoid.js';
+import customBuffer from "../_buffer.js";
 
 class S3Client {
 
@@ -152,19 +141,11 @@ class S3Client {
     }
 
     _generateSignature(date, policy) {
-        // let c2 = crypto2;
-        // const dateKey2 = c2.createHmac('sha256', "AWS4" + this.config.secretAccessKey).update(date).digest();
-        // const dateRegionKey2 = c2.createHmac('sha256', dateKey).update(this.config.region).digest();
-        // const dateRegionServiceKey2 = c2.createHmac('sha256', dateRegionKey).update('s3').digest();
-        // const signingKey2 = c2.createHmac('sha256', dateRegionServiceKey).update('aws4_request').digest();
-        // const signature2 = c2.createHmac('sha256', signingKey).update(policy).digest('hex');
-
-        let c= CryptoES;
-        const dateKey = c.HmacSHA256(date, "AWS4" + this.config.secretAccessKey);
-        const dateRegionKey = c.HmacSHA256(this.config.region, dateKey);
-        const dateRegionServiceKey = c.HmacSHA256('s3', dateRegionKey);
-        const signingKey = c.HmacSHA256('aws4_request', dateRegionServiceKey);
-        const signature = c.HmacSHA256(policy, signingKey).toString(CryptoES.enc.Hex);
+        const dateKey = CryptoES.HmacSHA256(date, "AWS4" + this.config.secretAccessKey);
+        const dateRegionKey = CryptoES.HmacSHA256(this.config.region, dateKey);
+        const dateRegionServiceKey = CryptoES.HmacSHA256('s3', dateRegionKey);
+        const signingKey = CryptoES.HmacSHA256('aws4_request', dateRegionServiceKey);
+        const signature = CryptoES.HmacSHA256(policy, signingKey).toString(CryptoES.enc.Hex);
         return signature;
     }
 
@@ -179,7 +160,6 @@ class S3Client {
             : ( 
                 ( key && this.config.parseFileName && ((this.config.parsingFunction && s) || helpers.parseKey(key)) )  || 
                 key ||
-                // crypto.randomBytes(11).toString('hex')
                 nanoid()
               ) + "." + file.type.split("/")[1];
         return newKey;   
@@ -195,6 +175,3 @@ helpers.parseKey = function(key) {
 }
 
 export default S3Client;
-// module.exports = S3Client;
-// module.exports.default = S3Client;
-// exports.default = S3Client;
