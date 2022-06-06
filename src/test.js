@@ -1,7 +1,9 @@
-import customBuffer from 'buffer';
+const customBuffer = require("buffer/").Buffer
+// import customBuffer from 'buffer';
+
 
 const foo = () => {
     return customBuffer.from("Hello")
 };
 
-export { foo };
+module.exports = foo;
