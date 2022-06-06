@@ -1,5 +1,5 @@
 import CryptoES from 'crypto-es';
-import { nanoid } from 'nanoid';
+import nanoid  from '../nanoid.js';
 import customBuffer from "../buffer.js";
 
 // const Buffer = require('buffer/').Buffer;
