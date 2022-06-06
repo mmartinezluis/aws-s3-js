@@ -1,7 +1,7 @@
 import customBuffer from 'buffer';
 
-function foo(){
+const foo = () => {
     return customBuffer.from("Hello")
 };
 
-export default foo;
+export { foo };
