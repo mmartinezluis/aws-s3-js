@@ -1,2 +1,2 @@
 const customBuffer = require("buffer/").Buffer;
-module.exports = {customBuffer};
+module.exports = customBuffer;
