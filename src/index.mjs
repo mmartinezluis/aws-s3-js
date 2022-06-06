@@ -39,18 +39,18 @@ class S3Client {
 
             return new Promise((resolve, reject) => {
                 this._request(this.config.baseUrl, 'POST', formData, function(statusCode, xhr){
-                    if(statusCode >= 200 && statusCode <= 207) {
-                        return resolve({
-                            bucket: this.config.bucketName, 
-                            key: fileName, 
-                            location: this.config.baseUrl + "/" +  fileName, 
-                            status: statusCode 
+                    if(statusCode < 200 || statusCode > 207) {
+                        return reject({
+                            message: xhr.responseText, 
+                            status: xhr.status, 
+                            statusText: xhr.statusText
                         });
                     }
-                    return reject({
-                        message: xhr.responseText, 
-                        status: xhr.status, 
-                        statusText: xhr.statusText
+                    return resolve({
+                        bucket: this.config.bucketName, 
+                        key: fileName, 
+                        location: this.config.baseUrl + "/" +  fileName, 
+                        status: statusCode 
                     });
                 }.bind(this));
             })
@@ -64,14 +64,14 @@ class S3Client {
             this._sanityCheckConfig(); 
             if(typeof(key) !== "string" || !key.trim().length) throw new Error("'key' must be a nonempty string");
             return new Promise((resolve, reject) => {
-                this._request(this.config.baseUrl + "/" + (dirName ? dirName + "/" : "") + key, "DELETE", undefined, function(statusCode, xhr) {
+                this._request(this.config.baseUrl + "/" + key, "DELETE", undefined, function(statusCode, xhr) {
                     return resolve({
                         key: key, 
                         status: statusCode,
-                        xhr: xhr
+                        message: xhr.responseText
                     });
-                })
-            })
+                });
+            });
         } catch(error){
             return Promise.reject(error);
         }
@@ -107,12 +107,12 @@ class S3Client {
         if(this.config.baseUrl && (typeof(this.config.baseUrl) !== "string" || !this.config.baseUrl.trim().length)){ throw new Error("If included, 'baseUrl' must be a nonempty string") } else this.config.baseUrl = (this.config.baseUrl || 'https://' + this.config.bucketName + '.s3.' + this.config.region + '.amazonaws.com');         
         if(this.config.parseFileName && typeof(this.config.parseFileName) !== "boolean"){ throw new Error("If included, 'parseFileName' must be a boolean") } else this.config.parseFileName = this.config.parseFileName !== undefined ? this.config.parseFileName : true;
         if(this.config.onUploadProgress && typeof(this.config.onUploadProgress) !== "function") throw new Error("If included, the value for the 'onUploadProgress' key must be a function");
-        if(this.config.parsingFunction && typeof(this.config.parsingFunction) !== "function") throw new Error("If included, the value for the 'parsingFunction' key must be a function returning a nonempty string")
+        if(this.config.parsingFunction && typeof(this.config.parsingFunction) !== "function") throw new Error("If included, the value for the 'parsingFunction' key must be a function returning a nonempty string");
     }
 
     _sanityCheckPayload(payload) {
         if(!payload.file) throw new Error("A file must be provided");
-        if(payload.key && (typeof(payload.key) !== "string" || !payload.key.trim().length)) throw new Error("If included, the 'key' argumant must be a string");
+        if(payload.key && (typeof(payload.key) !== "string" || !payload.key.trim().length)) throw new Error("If included, the 'key' argumant must be a nomempty string");
         if(payload.dirName && (typeof(payload.dirName) !== "string" || !payload.dirName.trim().length)) throw new Error("If included, the 'dirName' argument must be a nonempty string");
     }
 
@@ -151,7 +151,7 @@ class S3Client {
 
     _generateKey(file, key) {
         let newKey, s;
-        if(this.config.parsingFunction && (typeof(s = this.config.parsingFunction(key)) !== "string" || !s.length)) throw new Error("The function for the 'parsingFunction' key must return a nonempty string")
+        if(this.config.parsingFunction && (typeof(s = this.config.parsingFunction(key)) !== "string" || !s.trim().length)) throw new Error("The function for the 'parsingFunction' config key must return a nonempty string; received '" + key + "'; returned '" + s + "'")
         newKey = key && key.includes('.') 
             ? (
                 ( this.config.parseFileName && ((this.config.parsingFunction && s) || helpers.parseKey(key)) ) ||
@@ -169,9 +169,9 @@ class S3Client {
 
 const helpers = {};
 helpers.parseKey = function(key) {
-    let parsed = key.replace(/[{`}^%\]">[~<|#/=?+:\s]/g, "").replace(/[\\]/g, "")
-    if(!parsed.length) throw new Error("A 'key' may not be composed of special characters only as some are scaped, which may ressult in an empty (invalid) key")
-    return parsed
+    let parsed = key.replace(/[{`}^%\]">[~<|#/=?+:\s]/g, "").replace(/[\\]/g, "");
+    if(!parsed.length) throw new Error("A 'key' may not be composed of special characters only as some are scaped, which may result in an empty (invalid) key; recieved '" + key + "'; returned '" + parsed + "'");
+    return parsed;
 }
 
 export default S3Client;
