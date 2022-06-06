@@ -1,6 +1,6 @@
 {
   "name": "aws-s3-js",
-  "version": "1.0.47",
+  "version": "1.0.48",
   "description": "upload/delete files from an Amazon S3 bucket",
   "main": "src/test2.mjs",
   "scripts": {
