@@ -5,7 +5,7 @@ Upload files to an Amazon S3 bucket using JavaScript.
 
 [Finally: `aws-s3-js` now works straight out of the box with react-scripts 5 and Webpack 5, even if you have not configured your app to [polyfill Node Js core modules](https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5). `aws-s3-js` also works with react-scripts 4 straight out of the box.]
 
-[Note: aws-s3-js does not currently support Typescript; for this reason, you might see a message next to the import statement (`import awsS3Js from 'aws-s3-js'`) that reads `Could not find a declaration file for module "aws-s3-js". '/.../node_modules/aws-s3-js/src/index.mjs' implicitly has an 'any' type.` Don't worry, this does not affect the functionality of the package. I will be working on adding Typescript support next (and the message will go away).]
+[Note: aws-s3-js does not currently support Typescript; for this reason, you might see a message next to your import statement (`import awsS3Js from 'aws-s3-js'`) that reads `Could not find a declaration file for module "aws-s3-js". '/.../node_modules/aws-s3-js/src/index.mjs' implicitly has an 'any' type.` Don't worry, this does not affect the functionality of the package. I will be working on adding Typescript support next (and the message will go away).]
 
 ## Installation
 
@@ -150,7 +150,7 @@ it will be parsed before sending the file to Amazon, and you'll get a response c
     status: 204
 }
 ```
-You can see that some special characters were removed as well as blank spaces. The module's default parsing function takes care of removing some special characters that may void your object's Amazon S3 key (such as '#', '?', '+'). You can more info about valid characters for objects' key (file names) in the More Info section below. 
+You can see that some special characters were removed as well as blank spaces. The module's default parsing function takes care of removing some special characters that may void your object's Amazon S3 key (such as '#', '?', '+'). You can get more info about valid characters for objects' key (file names) in the **More Info** section below. 
 
 ### Creating and/or uploading to a specific directory:
 
@@ -164,7 +164,7 @@ S3Client
     .then( data => console.log(data))
 ```
 
-Then response object would contain 
+Then, the response object would contain 
 ```javascript
 key: "technology/adjacency-list.jpeg"
 ```
@@ -252,7 +252,7 @@ const parsingFunction = function(key) {
 }
 
 const S3Client = new awsS3Js({
-    bucketName: "<bueket-name>",
+    bucketName: "<bucket-name>",
     region: "<bucket-region>",
     accessKeyId: "<your-accessKey>",
     secretAccessKey: "<your-secrectAccessKey>",
@@ -267,7 +267,7 @@ S3Client
     .then( data => console.log(data))
 
 // Expected key in response object:
-ley: "thisisthefilekey.png"
+key: "thisisthefilekey.png"
 ```
 
 ## Dependencies
@@ -290,7 +290,8 @@ This package is inspired on and improves upon react-aws-s3.
 ## Contributing
 Coming later.
 
-
+## License
+MIT
 
 
 
