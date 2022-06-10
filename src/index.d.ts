@@ -9,7 +9,7 @@ declare class S3Client {
         this.config = config;
     }
 
-    uploadFile(file: any, key: string, dirName: string): Promise<object> {
+    uploadFile(file: any, key: string, dirName: string): Promise<any> {
         try {
             this._sanityCheckConfig(); 
             this._sanityCheckPayload({file, key, dirName});
@@ -60,7 +60,7 @@ declare class S3Client {
         }
     }
 
-    deleteFile(key: string): Promise<object> {
+    deleteFile(key: string): Promise<any> {
         try {
             this._sanityCheckConfig(); 
             if(typeof(key) !== "string" || !key.trim().length) throw new Error("'key' must be a nonempty string");

@@ -35,4 +35,4 @@ const config = {
 const S3Client = new awsS3Js(config);
 ```
 
-Please refer to `aws-s3-js`[github readme](https://github.com/mmartinezluis/aws-s3-js) for  full documentation and exmaple usage.
+Please refer to `aws-s3-js`[github readme](https://github.com/mmartinezluis/aws-s3-js) for  full documentation and example usage.
