@@ -3,9 +3,7 @@
 
 Upload files to an Amazon S3 bucket using JavaScript.
 
-[Finally: `aws-s3-js` now works straight out of the box with react-scripts 5 and Webpack 5, even if you have not configured your app to [polyfill Node Js core modules](https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5). `aws-s3-js` also works with react-scripts 4 straight out of the box.]
-
-[Note: aws-s3-js does not currently support Typescript; for this reason, you might see a message next to your import statement (`import awsS3Js from 'aws-s3-js'`) that reads `Could not find a declaration file for module "aws-s3-js". '/.../node_modules/aws-s3-js/src/index.mjs' implicitly has an 'any' type.` Don't worry, this does not affect the functionality of the package. I will be working on adding Typescript support next (and the message will go away).]
+[Special note: `aws-s3-js` now works straight out of the box with react-scripts 5 and Webpack 5, even if you have not configured your app to [polyfill Node Js core modules](https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5). `aws-s3-js` also works with react-scripts 4 straight out of the box.]
 
 ## Installation
 
