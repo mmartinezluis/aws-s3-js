@@ -3,10 +3,11 @@
 
 Upload files to an Amazon S3 bucket using JavaScript.
 
-[Special note: `aws-s3-js` now works straight out of the box with react-scripts 5 and Webpack 5, even if you have not configured your app to [polyfill Node Js core modules](https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5). `aws-s3-js` also works with react-scripts 4 straight out of the box.]
+[Special note: `aws-s3-js` works straight out of the box with react-scripts 5 and Webpack 5, even if you have not configured your app to [polyfill Node Js core modules](https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5). `aws-s3-js` also works with react-scripts 4 straight out of the box.]
 
 ## Installation
 
+### Using npm:
 To install the package, in your project run
 
 ```
@@ -17,6 +18,62 @@ Then use a default import statement:
 ```
 import awsS3Js from 'aws-s3-js'
 ```
+
+### In the browser:
+For development, use: 
+```html
+<html>
+<head>
+  // your meta tags
+</head>
+<body>
+    // your html code
+
+    <script type="module">
+        import awsS3Js from 'https://jspm.dev/aws-s3-js/src/index.mjs';
+        // your code 
+    </script>
+</body>
+</html>
+```
+
+For production, use:
+```html
+<html>
+<head>
+  // your meta tags
+</head>
+<body>
+    // your html code
+
+    // Note: if you are using more than one 'type="module"' script, the below importmap script should be placed above the module scripts
+    <script type="importmap">
+        {
+            "imports": {
+            "aws-s3-js": "https://ga.jspm.io/npm:aws-s3-js@1.2.0/src/index.mjs"
+            },
+            "scopes": {
+                "https://ga.jspm.io/": {
+                    "buffer": "https://ga.jspm.io/npm:@jspm/core@2.0.0-beta.24/nodelibs/browser/buffer.js",
+                    "crypto-es": "https://ga.jspm.io/npm:crypto-es@1.2.7/lib/index.js",
+                    "nanoid": "https://ga.jspm.io/npm:nanoid@3.3.4/index.browser.js"
+                }
+            }
+        }
+    </script>
+
+     <!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+) -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.1/dist/es-module-shims.js" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import awsS3Js from "aws-s3-js";
+        // your code
+    </script>
+    </body>
+</html>
+```
+
+(Note: the browser implementation may change in future versions as I'm still experimenting with other module types for the browser (such as AMD modules); however, since the jspm (used for browser support here) is versioned, this current version will continue to work even if another implementation is used in future versions of the package)
 
 ## Usage
 
