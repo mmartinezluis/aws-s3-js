@@ -1,5 +1,8 @@
-
 # AWS S3 JS
+
+![npm](https://img.shields.io/npm/v/aws-s3-js)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/mmartinezluis/aws-s3-js/main)
+![NPM](https://img.shields.io/npm/l/aws-s3-js?color=blue)
 
 Upload files to an Amazon S3 bucket using JavaScript.
 

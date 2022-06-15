@@ -19,7 +19,7 @@
   ],
   "author": "Luis Martinez",
   "types": "src/index.d.ts",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mmartinezluis/aws-s3-js/issues"
   },
